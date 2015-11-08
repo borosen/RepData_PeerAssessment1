@@ -8,18 +8,96 @@ output:
 
 ## Loading and preprocessing the data
 
+```{r Load data}
+library(ggplot2)
+library(dplyr)
+
+
+#unzip ('activity.zip')
+activity <- read.csv('activity.csv')
+activity <- tbl_df(activity)
+activity$date <- as.Date(activity$date)
+
+daily_activity <- activity %>%
+        group_by(date) %>%
+        summarize(steps = sum(steps))
+
+```
 
 
 ## What is mean total number of steps taken per day?
 
+```{r Mean total number of steps taken per day}
+daily_activity <- activity %>%
+    group_by(date) %>%
+    summarize(steps = sum(steps))
+
+ggplot(daily_activity, aes(x=steps)) +
+    geom_histogram(binwidth = 1000)
+
+mean(daily_activity$steps, na.rm = T)
+median(daily_activity$steps, na.rm = T)
+```
 
 
 ## What is the average daily activity pattern?
 
+```{r}
+meanPerInterval <- activity %>%
+    group_by(interval) %>%
+    summarize(steps = mean(steps, na.rm = T))
+
+ggplot(meanPerInterval, aes(x=interval, y = steps)) +
+    geom_line()
+
+meanPerInterval[which.max(meanPerInterval$steps),1]
+
+```
+
 
 
 ## Imputing missing values
+```{r}
+#Fill empty with mean value
+sum(is.na(activity$steps))
+
+activity_filled <- activity
+activity_filled$steps <- ifelse(is.na(activity_filled$steps), 
+                                as.integer(meanPerInterval$steps), 
+                                activity_filled$steps)
+
+
+daily_activity_filled <- activity_filled %>%
+    group_by(date) %>%
+    summarize(steps = sum(steps))
+
+ggplot(daily_activity_filled, aes(x=steps)) +
+    geom_histogram(binwidth = 1000)
+
+
+mean(daily_activity_filled$steps)
+median(daily_activity_filled$steps)
+```
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```{r}
+daytype <- c("weekend", "weekday", "weekday", "weekday", "weekday", "weekday", "weekday")
+all_activity_week <- activity_filled
+all_activity_week$daytype <- factor(daytype[as.POSIXlt(activity_filled$date)$wday + 1])
+
+meanPerIntervalWeek <- all_activity_week %>%
+    group_by(daytype, interval) %>%
+    summarize(steps = mean(steps, na.rm = T))
+
+ggplot(meanPerIntervalWeek, aes(x=interval, y = steps)) +
+    geom_line() +
+    facet_wrap(~ daytype, ncol=1, scales = "free")
+
+
+
+```
+
