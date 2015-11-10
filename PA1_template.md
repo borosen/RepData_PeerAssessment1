@@ -1,7 +1,9 @@
 # Reproducible Research: Peer Assessment 1
 
 
-## Loading and preprocessing the data
+### Loading and preprocessing the data
+Load the data from activity.zip.
+No extra processing of the data necessary to get started.
 
 
 ```r
@@ -10,7 +12,8 @@ activity <- read.csv('activity.csv')
 ```
 
 
-## What is mean total number of steps taken per day?
+### What is mean total number of steps taken per day?
+Calucate the total number of steps taken per day. Plot the histogram for this data and calculate mean and median.
 
 
 ```r
@@ -29,7 +32,8 @@ day_median <- median(daily_activity$steps, na.rm = T)
 
 The mean number of steps per days is **10766** and the median is **10765**
 
-## What is the average daily activity pattern?
+### What is the average daily activity pattern?
+Show the average daily activity pattern by viewing a time series plot of the 5-minute interval and the average number of steps taken across all days. 
 
 
 ```r
@@ -49,17 +53,15 @@ max_interval <- interval_mean[which.max(interval_mean$steps),1]
 The interval with max number of steps is **835**. I.e. 8:35 in the morning.
 
 
-## Inputing missing values
-
+### Inputing missing values
+Investigate how the missing values are affecting any of the calucationations  
 The original dataset is enriched by replacing the missing values with the corresponding mean value for that interval.
 
 
 ```r
-#Fill empty with mean value
-missing_values <- sum(is.na(activity$steps))
 activity_filled <- activity
 activity_filled$steps <- ifelse(is.na(activity_filled$steps), 
-                                as.integer(interval_mean$steps), 
+                                interval_mean$steps, 
                                 activity_filled$steps)
 daily_activity_filled <- aggregate(steps ~ date, activity_filled, sum)
 
@@ -71,18 +73,20 @@ hist(daily_activity_filled$steps, breaks = seq(0, 25000, 2500),
 ![](PA1_template_files/figure-html/Replace missing values-1.png) 
 
 ```r
+missing_values <- sum(is.na(activity$steps))
+days_missing_values <- length(unique(subset(activity, is.na(steps))$date))
 day_mean <- mean(daily_activity_filled$steps)
 day_median <- median(daily_activity_filled$steps)
 ```
 
-The number of missing values where **2304**.  
-With the missing values replaced the mean number of steps per days is now **10750** and the median is **10641**.
-The mean number is about the same as before, but the median has moved slightly.  
-The number of intervals with around 10000 steps is about 5 more.
+The number of missing values where **2304** among **8** days.    
+With the missing values replaced, the mean number of steps per days is now **10766**, and the median is **10766**.
+The mean number is the same as before, but the median has moved slightly.  
+The number of days with around 10000 steps is 8 more; the days with the missing entries.
 
 
-## Are there differences in activity patterns between weekdays and weekends?
-
+### Are there differences in activity patterns between weekdays and weekends?
+Split the activities by day type. I.e. weekdays and weekends. Plot the activity pattern graphs of these two groups.
 
 
 ```r
@@ -106,4 +110,7 @@ plot(weekenddays$interval, weekenddays$steps, type = "l",
 
 ![](PA1_template_files/figure-html/Difference in activity pattern-1.png) 
 
-The subjects seams to get going a bit later during the weekends. The activity is also spread out more during the day than on the weekdays.
+The activities starts a bit later during the weekends. They are also spread out more during the day than on the weekdays.
+
+#### Reference:
+[Reproducible Resarch, Peer Assessment 1](https://class.coursera.org/repdata-034/human_grading/view/courses/975147/assessments/3/submissions)
