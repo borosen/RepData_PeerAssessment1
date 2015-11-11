@@ -13,7 +13,7 @@ activity <- read.csv('activity.csv')
 
 
 ### What is mean total number of steps taken per day?
-Calucate the total number of steps taken per day. Plot the histogram for this data and calculate mean and median.
+Histogram of number of steps a day.
 
 
 ```r
@@ -33,7 +33,7 @@ day_median <- median(daily_activity$steps, na.rm = T)
 The mean number of steps per days is **10766** and the median is **10765**
 
 ### What is the average daily activity pattern?
-Show the average daily activity pattern by viewing a time series plot of the 5-minute interval and the average number of steps taken across all days. 
+The plot below shows the average daily activity pattern via a time series plot of the 5-minute interval and the average number of steps taken across all days. 
 
 
 ```r
@@ -54,8 +54,8 @@ The interval with max number of steps is **835**. I.e. 8:35 in the morning.
 
 
 ### Inputing missing values
-Investigate how the missing values are affecting any of the calucationations  
 The original dataset is enriched by replacing the missing values with the corresponding mean value for that interval.
+Decided to go with the actual mean value and not the integer part of the mean.
 
 
 ```r
@@ -82,11 +82,11 @@ day_median <- median(daily_activity_filled$steps)
 The number of missing values where **2304** among **8** days.    
 With the missing values replaced, the mean number of steps per days is now **10766**, and the median is **10766**.
 The mean number is the same as before, but the median has moved slightly.  
-The number of days with around 10000 steps is 8 more; the days with the missing entries.
+The number of days with around mean (1076) steps is 8 more; the days with the missing entries.
 
 
 ### Are there differences in activity patterns between weekdays and weekends?
-Split the activities by day type. I.e. weekdays and weekends. Plot the activity pattern graphs of these two groups.
+By spliting the activities by day type we can compare the activity patterns between weekday and weekends.
 
 
 ```r

@@ -18,7 +18,7 @@ activity <- read.csv('activity.csv')
 
 
 ### What is mean total number of steps taken per day?
-Calucate the total number of steps taken per day. Plot the histogram for this data and calculate mean and median.
+Histogram of number of steps a day.
 
 ```{r Mean total number of steps taken per day}
 daily_activity <- aggregate(steps ~ date, activity, sum)
@@ -32,7 +32,7 @@ day_median <- median(daily_activity$steps, na.rm = T)
 The mean number of steps per days is **`r format(day_mean, digits = 1)`** and the median is **`r day_median`**
 
 ### What is the average daily activity pattern?
-Show the average daily activity pattern by viewing a time series plot of the 5-minute interval and the average number of steps taken across all days. 
+The plot below shows the average daily activity pattern via a time series plot of the 5-minute interval and the average number of steps taken across all days. 
 
 ```{r Average daily activity pattern}
 interval_mean <- aggregate(steps ~ interval, activity, mean)
@@ -48,8 +48,8 @@ The interval with max number of steps is **`r max_interval`**. I.e. 8:35 in the 
 
 
 ### Inputing missing values
-Investigate how the missing values are affecting any of the calucationations  
 The original dataset is enriched by replacing the missing values with the corresponding mean value for that interval.
+Decided to go with the actual mean value and not the integer part of the mean.
 
 ```{r Replace missing values}
 activity_filled <- activity
@@ -71,11 +71,11 @@ day_median <- median(daily_activity_filled$steps)
 The number of missing values where **`r missing_values`** among **`r days_missing_values`** days.    
 With the missing values replaced, the mean number of steps per days is now **`r format(day_mean, digits = 1)`**, and the median is **`r format(day_median, digits = 1)`**.
 The mean number is the same as before, but the median has moved slightly.  
-The number of days with around 10000 steps is 8 more; the days with the missing entries.
+The number of days with around mean (1076) steps is 8 more; the days with the missing entries.
 
 
 ### Are there differences in activity patterns between weekdays and weekends?
-Split the activities by day type. I.e. weekdays and weekends. Plot the activity pattern graphs of these two groups.
+By spliting the activities by day type we can compare the activity patterns between weekday and weekends.
 
 ```{r "Difference in activity pattern", fig.height=10}
 daytype <- c("weekend", "weekday", "weekday", "weekday", "weekday", "weekday", "weekend")

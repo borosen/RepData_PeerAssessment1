@@ -72,7 +72,7 @@ activity &lt;- read.csv('activity.csv')</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level3">
 <h3>What is mean total number of steps taken per day?</h3>
-<p>Calucate the total number of steps taken per day. Plot the histogram for this data and calculate mean and median.</p>
+<p>Histogram of number of steps a day.</p>
 <pre class="r"><code>daily_activity &lt;- aggregate(steps ~ date, activity, sum)
 hist(daily_activity$steps, breaks = seq(0, 25000, 2500), 
      main = &quot;Histogram of number of steps per day&quot;,
@@ -84,7 +84,7 @@ day_median &lt;- median(daily_activity$steps, na.rm = T)</code></pre>
 </div>
 <div id="what-is-the-average-daily-activity-pattern" class="section level3">
 <h3>What is the average daily activity pattern?</h3>
-<p>Show the average daily activity pattern by viewing a time series plot of the 5-minute interval and the average number of steps taken across all days.</p>
+<p>The plot below shows the average daily activity pattern via a time series plot of the 5-minute interval and the average number of steps taken across all days.</p>
 <pre class="r"><code>interval_mean &lt;- aggregate(steps ~ interval, activity, mean)
 plot(interval_mean$interval, interval_mean$steps, type = &quot;l&quot;, 
      main = &quot;Average daily activity pattern&quot;,
@@ -96,7 +96,7 @@ plot(interval_mean$interval, interval_mean$steps, type = &quot;l&quot;,
 </div>
 <div id="inputing-missing-values" class="section level3">
 <h3>Inputing missing values</h3>
-<p>Investigate how the missing values are affecting any of the calucationations<br />The original dataset is enriched by replacing the missing values with the corresponding mean value for that interval.</p>
+<p>The original dataset is enriched by replacing the missing values with the corresponding mean value for that interval. Decided to go with the actual mean value and not the integer part of the mean.</p>
 <pre class="r"><code>activity_filled &lt;- activity
 activity_filled$steps &lt;- ifelse(is.na(activity_filled$steps), 
                                 interval_mean$steps, 
@@ -111,11 +111,11 @@ hist(daily_activity_filled$steps, breaks = seq(0, 25000, 2500),
 days_missing_values &lt;- length(unique(subset(activity, is.na(steps))$date))
 day_mean &lt;- mean(daily_activity_filled$steps)
 day_median &lt;- median(daily_activity_filled$steps)</code></pre>
-<p>The number of missing values where <strong>2304</strong> among <strong>8</strong> days.<br />With the missing values replaced, the mean number of steps per days is now <strong>10766</strong>, and the median is <strong>10766</strong>. The mean number is the same as before, but the median has moved slightly.<br />The number of days with around 10000 steps is 8 more; the days with the missing entries.</p>
+<p>The number of missing values where <strong>2304</strong> among <strong>8</strong> days.<br />With the missing values replaced, the mean number of steps per days is now <strong>10766</strong>, and the median is <strong>10766</strong>. The mean number is the same as before, but the median has moved slightly.<br />The number of days with around mean (1076) steps is 8 more; the days with the missing entries.</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level3">
 <h3>Are there differences in activity patterns between weekdays and weekends?</h3>
-<p>Split the activities by day type. I.e. weekdays and weekends. Plot the activity pattern graphs of these two groups.</p>
+<p>By spliting the activities by day type we can compare the activity patterns between weekday and weekends.</p>
 <pre class="r"><code>daytype &lt;- c(&quot;weekend&quot;, &quot;weekday&quot;, &quot;weekday&quot;, &quot;weekday&quot;, &quot;weekday&quot;, &quot;weekday&quot;, &quot;weekend&quot;)
 all_activity_week &lt;- activity_filled
 all_activity_week$daytype &lt;- factor(daytype[as.POSIXlt(activity_filled$date)$wday + 1])
